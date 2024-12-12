@@ -1,0 +1,53 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "env": {
+            "type": "string",
+            "defaultValue" : "dev",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "appname": {
+            "type": "string",
+            "defaultValue": "webapp",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "region": {
+            "type": "string",
+            "defaultValue": "uk",
+            "metadata": {
+                "description": "description"
+            }
+        }
+    },
+    "functions": [],
+    "variables": {
+        "storageAccName": "[concat('stg',parameters('appname'),parameters('env'),parameters('region'), substring(uniqueString(resourceGroup().id),0,5))]"
+    },
+    "resources": [
+        {
+            "name": "[variables('storageAccName')]",            
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2023-01-01",
+            "tags": {
+                "displayName": "[variables('storageAccName')]"
+            },
+            "location": "[resourceGroup().location]",
+            "kind": "StorageV2",
+            "sku": {
+                "name": "Premium_LRS",
+                "tier": "Premium"
+            }
+        }
+    ],
+    "outputs": {
+        "output1": {
+            "type": "string",
+            "value": "[variables('storageAccName')]"
+        }
+    }
+}

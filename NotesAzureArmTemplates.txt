@@ -1,0 +1,352 @@
+Chapter 08
+
+Install Azure Powershell :
+https://learn.microsoft.com/en-us/powershell/azure/install-azps-windows?view=azps-13.0.0&tabs=powershell&pivots=windows-psgallery
+
+Admin powershell
+> Install-Module -Name Az -Repository PSGallery -Force
+
+Upgrade 
+> Update-Module -Name Az -Force
+
+Azure Arm Template reference 
+https://learn.microsoft.com/en-us/azure/templates/
+
+Powershell to login into Azure
+> Connect-AzAccount
+
+List all resources
+> Get-AzResource
+
+List resource groups
+> Get-AzResourceGroup
+
+Create new resource groups
+> New-AzResourceGroup -Name sre-dev-001 -location eastus
+> New-AzResourceGroup -Name rstest-dev-001 -location ukwest
+
+example:
+E:\...\08DemoCreateResource>New-AzResourceGroup -Name rstest-dev-001 -location ukwest
+
+
+ResourceGroupName : rstest-dev-001
+Location          : ukwest
+ProvisioningState : Succeeded
+Tags              :
+ResourceId        : /subscriptions/058657b1-6abc-4ff4-a48e-112719f4a200/resourceGroups/rstest-dev-001
+
+Deploy templates
+> New-AzResourceGroupDeployment -Name myfirsttemplate -ResourceGroupName rstest-dev-001 -TemplateFile ./first-template.json
+
+ example:
+ E:\...\08DemoCreateResource>New-AzResourceGroupDeployment -Name myfirsttemplate -ResourceGroupName rstest-dev-001 -TemplateFile ./first-template.json
+
+
+DeploymentName          : myfirsttemplate
+ResourceGroupName       : rstest-dev-001
+ProvisioningState       : Succeeded
+Timestamp               : 07/12/2024 15:23:01
+Mode                    : Incremental
+TemplateLink            :
+Parameters              :
+Outputs                 :
+DeploymentDebugLogLevel :
+
+Chapter 09
+Added storage blob resource 
+
+>New-AzResourceGroupDeployment -Name myfirsttemplate -ResourceGroupName rstest-dev-001 -TemplateFile ./first-template.json
+
+example:
+E:\...\09DemoCreateResource>New-AzResourceGroupDeployment -Name myfirsttemplate -ResourceGroupName rstest-dev-001 -TemplateFile ./first-template.json
+
+
+DeploymentName          : myfirsttemplate
+ResourceGroupName       : rstest-dev-001
+ProvisioningState       : Succeeded
+Timestamp               : 07/12/2024 15:33:17
+Mode                    : Incremental
+TemplateLink            :
+Parameters              :
+Outputs                 :
+DeploymentDebugLogLevel :
+
+Chapter 11
+>New-AzResourceGroupDeployment -Name secondtemplate -ResourceGroupName rstest-dev-001 -TemplateFile ./parameters.json -stgName xxxmonkeydev421
+
+example:
+E:\...\11Parameters>New-AzResourceGroupDeployment -Name secondtemplate -ResourceGroupName rstest-dev-001 -TemplateFile ./parameters.json -stgName xxxmonkeydev421
+
+
+DeploymentName          : secondtemplate
+ResourceGroupName       : rstest-dev-001
+ProvisioningState       : Succeeded
+Timestamp               : 08/12/2024 08:33:08
+Mode                    : Incremental
+TemplateLink            :
+Parameters              :
+                          Name             Type                       Value
+                          ===============  =========================  ==========
+                          stgName          String                     "xxxmonkeydev421"
+
+Outputs                 :
+DeploymentDebugLogLevel :
+
+Chapter 12
+>New-AzResourceGroupDeployment -Name thirdtemplate -ResourceGroupName rstest-dev-001 -TemplateFile ./outputparameters.json
+
+example:
+E:\...\12OutputParameters>New-AzResourceGroupDeployment -Name thirdtemplate -ResourceGroupName rstest-dev-001 -TemplateFile ./outputparameters.json
+
+
+DeploymentName          : thirdtemplate
+ResourceGroupName       : rstest-dev-001
+ProvisioningState       : Succeeded
+Timestamp               : 08/12/2024 08:56:21
+Mode                    : Incremental
+TemplateLink            :
+Parameters              :
+Outputs                 :
+                          Name             Type                       Value
+                          ===============  =========================  ==========
+                          stgEndpoints     Object                     {"web":"https://stgsredev1231132.z35.web.core.win
+                          dows.net/","blob":"https://stgsredev1231132.blob.core.windows.net/"}
+
+DeploymentDebugLogLevel :
+
+E:\...\12OutputParameters>Get-AzStorageAccount -Name stgsredev1231132 -ResourceGroupName rstest-dev-001
+
+StorageAccountName ResourceGroupName PrimaryLocation SkuName     Kind      AccessTier CreationTime        ProvisioningS
+                                                                                                          tate
+------------------ ----------------- --------------- -------     ----      ---------- ------------        -------------
+stgsredev1231132   rstest-dev-001    ukwest          Premium_LRS StorageV2 Hot        08/12/2024 08:55:59 Succeeded
+
+E:\...\12OutputParameters>$stg = Get-AzStorageAccount -Name stgsredev1231132 -ResourceGroupName rstest-dev-001
+
+E:\...\12OutputParameters>$stg | Get-Member
+
+
+   TypeName: Microsoft.Azure.Commands.Management.Storage.Models.PSStorageAccount
+
+Name                              MemberType Definition
+----                              ---------- ----------
+Equals                            Method     bool Equals(System.Object obj)
+GetHashCode                       Method     int GetHashCode()
+GetType                           Method     type GetType()
+ToString                          Method     string ToString()
+AccessTier                        Property   System.Nullable[Microsoft.Azure.Management.Storage.Models.AccessTier] A...
+AllowBlobPublicAccess             Property   System.Nullable[bool] AllowBlobPublicAccess {get;set;}
+AllowCrossTenantReplication       Property   System.Nullable[bool] AllowCrossTenantReplication {get;set;}
+AllowedCopyScope                  Property   string AllowedCopyScope {get;set;}
+AllowSharedKeyAccess              Property   System.Nullable[bool] AllowSharedKeyAccess {get;set;}
+AzureFilesIdentityBasedAuth       Property   Microsoft.Azure.Commands.Management.Storage.Models.PSAzureFilesIdentity...
+BlobRestoreStatus                 Property   Microsoft.Azure.Commands.Management.Storage.Models.PSBlobRestoreStatus ...
+Context                           Property   Microsoft.Azure.Commands.Common.Authentication.Abstractions.IStorageCon...
+CreationTime                      Property   System.Nullable[datetime] CreationTime {get;set;}
+CustomDomain                      Property   Microsoft.Azure.Commands.Management.Storage.Models.PSCustomDomain Custo...
+DnsEndpointType                   Property   string DnsEndpointType {get;set;}
+EnableHierarchicalNamespace       Property   System.Nullable[bool] EnableHierarchicalNamespace {get;set;}
+EnableHttpsTrafficOnly            Property   System.Nullable[bool] EnableHttpsTrafficOnly {get;set;}
+EnableLocalUser                   Property   System.Nullable[bool] EnableLocalUser {get;set;}
+EnableNfsV3                       Property   System.Nullable[bool] EnableNfsV3 {get;set;}
+EnableSftp                        Property   System.Nullable[bool] EnableSftp {get;set;}
+Encryption                        Property   Microsoft.Azure.Management.Storage.Models.Encryption Encryption {get;set;}
+ExtendedLocation                  Property   Microsoft.Azure.Commands.Management.Storage.Models.PSExtendedLocation E...
+ExtendedProperties                Property   System.Collections.Generic.IDictionary[string,string] ExtendedPropertie...
+FailoverInProgress                Property   System.Nullable[bool] FailoverInProgress {get;set;}
+GeoReplicationStats               Property   Microsoft.Azure.Commands.Management.Storage.Models.PSGeoReplicationStat...
+Id                                Property   string Id {get;set;}
+Identity                          Property   Microsoft.Azure.Management.Storage.Models.Identity Identity {get;set;}
+ImmutableStorageWithVersioning    Property   Microsoft.Azure.Commands.Management.Storage.Models.PSImmutableStorageAc...
+KeyCreationTime                   Property   Microsoft.Azure.Commands.Management.Storage.Models.PSKeyCreationTime Ke...
+KeyPolicy                         Property   Microsoft.Azure.Management.Storage.Models.KeyPolicy KeyPolicy {get;}
+Kind                              Property   string Kind {get;set;}
+LargeFileSharesState              Property   string LargeFileSharesState {get;set;}
+LastGeoFailoverTime               Property   System.Nullable[datetime] LastGeoFailoverTime {get;set;}
+Location                          Property   string Location {get;set;}
+MinimumTlsVersion                 Property   string MinimumTlsVersion {get;set;}
+NetworkRuleSet                    Property   Microsoft.Azure.Commands.Management.Storage.Models.PSNetworkRuleSet Net...
+PrimaryEndpoints                  Property   Microsoft.Azure.Management.Storage.Models.Endpoints PrimaryEndpoints {g...
+PrimaryLocation                   Property   string PrimaryLocation {get;set;}
+ProvisioningState                 Property   System.Nullable[Microsoft.Azure.Management.Storage.Models.ProvisioningS...
+PublicNetworkAccess               Property   string PublicNetworkAccess {get;set;}
+ResourceGroupName                 Property   string ResourceGroupName {get;set;}
+RoutingPreference                 Property   Microsoft.Azure.Commands.Management.Storage.Models.PSRoutingPreference ...
+SasPolicy                         Property   Microsoft.Azure.Management.Storage.Models.SasPolicy SasPolicy {get;}
+SecondaryEndpoints                Property   Microsoft.Azure.Management.Storage.Models.Endpoints SecondaryEndpoints ...
+SecondaryLocation                 Property   string SecondaryLocation {get;set;}
+Sku                               Property   Microsoft.Azure.Commands.Management.Storage.Models.PSSku Sku {get;set;}
+StatusOfPrimary                   Property   System.Nullable[Microsoft.Azure.Management.Storage.Models.AccountStatus...
+StatusOfSecondary                 Property   System.Nullable[Microsoft.Azure.Management.Storage.Models.AccountStatus...
+StorageAccountName                Property   string StorageAccountName {get;set;}
+StorageAccountSkuConversionStatus Property   Microsoft.Azure.Commands.Management.Storage.Models.PSStorageAccountSkuC...
+Tags                              Property   System.Collections.Generic.IDictionary[string,string] Tags {get;set;}
+
+
+E:\...\12OutputParameters>New-AzResourceGroupDeployment -Name thirdtemplate -ResourceGroupName rstest-dev-001 -TemplateFile ./outputparameters.json
+
+
+DeploymentName          : thirdtemplate
+ResourceGroupName       : rstest-dev-001
+ProvisioningState       : Succeeded
+Timestamp               : 08/12/2024 09:20:43
+Mode                    : Incremental
+TemplateLink            :
+Parameters              :
+Outputs                 :
+                          Name             Type                       Value
+                          ===============  =========================  ==========
+                          stgEndpoints     Object                     {"web":"https://stgsredev1231132.z35.web.core.win
+                          dows.net/","blob":"https://stgsredev1231132.blob.core.windows.net/"}
+                          accessTier       String                     "Hot"
+
+DeploymentDebugLogLevel :
+
+Chapter 13
+
+>New-AzResourceGroupDeployment -Name thirdtemplate -ResourceGroupName rstest-dev-001 -TemplateFile ./outputparameters.json -mode Incremental
+
+-mode Incremental
+Will apply changes without effecting existing resources.
+
+>New-AzResourceGroupDeployment -Name thirdtemplate -ResourceGroupName rstest-dev-001 -TemplateFile ./outputparameters.json -mode Complete
+
+-mode Complete
+Will remove any resources not defined in template in that resource group.
+
+Adding the -Confirm parameter to the New-AzResourceGroupDeployment will result in a confirmation prompt.
+
+example :
+
+E:\...\12OutputParameters>New-AzResourceGroupDeployment -Name thirdtemplate -ResourceGroupName rstest-dev-001 -TemplateFile ./outputparameters.json -Confirm
+
+Note: The result may contain false positive predictions (noise).
+You can help us improve the accuracy of the result by opening an issue here: https://aka.ms/WhatIfIssues.
+
+Resource and property changes are indicated with these symbols:
+  x NoEffect
+  = NoChange
+  * Ignore
+
+The deployment will update the following scope:
+
+Scope: /subscriptions/058657b1-6abc-4ff4-a48e-112719f4a200/resourceGroups/rstest-dev-001
+
+  = Microsoft.Storage/storageAccounts/stgsredev1231132 [2023-05-01]
+    x sku.tier: "Premium"
+
+  * Microsoft.Storage/storageAccounts/stgrs0123
+  * Microsoft.Storage/storageAccounts/xxxmonkeydev421
+
+Resource changes: 1 no change, 2 to ignore.
+
+Are you sure you want to execute the deployment?
+[Y] Yes  [A] Yes to All  [N] No  [L] No to All  [S] Suspend  [?] Help (default is "Y"):
+
+Confirm prompt with Mode Complete
+
+E:\...\12OutputParameters>New-AzResourceGroupDeployment -Name thirdtemplate -ResourceGroupName rstest-dev-001 -TemplateFile ./outputparameters.json -Confirm -Mode Complete
+
+Note: The result may contain false positive predictions (noise).
+You can help us improve the accuracy of the result by opening an issue here: https://aka.ms/WhatIfIssues.
+
+Resource and property changes are indicated with these symbols:
+  - Delete
+  x NoEffect
+  = NoChange
+
+The deployment will update the following scope:
+
+Scope: /subscriptions/058657b1-6abc-4ff4-a48e-112719f4a200/resourceGroups/rstest-dev-001
+
+  - Microsoft.Storage/storageAccounts/stgrs0123
+
+      id:
+"/subscriptions/058657b1-6abc-4ff4-a48e-112719f4a200/resourceGroups/rstest-dev-001/providers/Microsoft.Storage/storageA
+ccounts/stgrs0123"
+      kind:             "StorageV2"
+      location:         "ukwest"
+      name:             "stgrs0123"
+      sku.name:         "Premium_LRS"
+      sku.tier:         "Premium"
+      tags.displayName: "stgrs0123"
+      tags.scriptName:  "first-template.json"
+      type:             "Microsoft.Storage/storageAccounts"
+
+  - Microsoft.Storage/storageAccounts/xxxmonkeydev421
+
+      id:
+"/subscriptions/058657b1-6abc-4ff4-a48e-112719f4a200/resourceGroups/rstest-dev-001/providers/Microsoft.Storage/storageA
+ccounts/xxxmonkeydev421"
+      kind:             "StorageV2"
+      location:         "ukwest"
+      name:             "xxxmonkeydev421"
+      sku.name:         "Premium_LRS"
+      sku.tier:         "Premium"
+      tags.displayName: "xxxmonkeydev421"
+      type:             "Microsoft.Storage/storageAccounts"
+
+  = Microsoft.Storage/storageAccounts/stgsredev1231132 [2023-05-01]
+    x sku.tier: "Premium"
+
+Resource changes: 2 to delete, 1 no change.
+
+Are you sure you want to execute the deployment?
+[Y] Yes  [A] Yes to All  [N] No  [L] No to All  [S] Suspend  [?] Help (default is "Y"):
+
+Deletion of resouces
+https://learn.microsoft.com/en-us/azure/azure-resource-manager/templates/deployment-complete-mode-deletion
+
+Chapter 15
+Validation of ARM templates
+https://learn.microsoft.com/en-us/azure/azure-resource-manager/templates/test-toolkit
+
+Download repo : https://github.com/Azure/arm-ttk/releases
+
+# set your location in the project directory:
+Set-Location -Path "$(YourGithubProjectFolder)\arm-ttk\unit-tests"
+
+> Set-Location -Path "E:\playground\azure\arm\udemyAzureInfrastructureAsCodeUsingJsonArmTemplates\15TestArmTemplates\arm-ttk-master\arm-ttk-master\arm-ttk\unit-tests"
+> Set-Location -Path "E:\playground\azure\arm\udemyAzureInfrastructureAsCodeUsingJsonArmTemplates\15TestArmTemplates\arm-ttk-master\arm-ttk-master\unit-tests"
+> Set-Location -Path "D:\dev\AzureArm\arm-ttk-master\arm-ttk-master\unit-tests"
+
+# import the module from the current branch, use -Force to make sure you have imported any code changes
+Import-Module ..\arm-ttk\arm-ttk.psd1 -Force
+
+# These are the same tests that run in the pipeline when doing a commit or a pull request (PR). 
+.\arm-ttk.tests.ps1
+
+Install :
+> Import-Module .\arm-ttk.psd1
+
+Run tests
+> Test-AzTemplate -TemplatePath \path\to\template
+> Test-AzTemplate -TemplatePath \path\to\template
+
+example:
+E:\...\15TestArmTemplates> Test-AzTemplate -TemplatePath .\outputparameters.json                                                                                                                                                                Validating 15TestArmTemplates\outputparameters.json                                                                       JSONFiles Should Be Valid                                                                                                 [+] JSONFiles Should Be Valid (22 ms)                                                                                                                                                                                                       Pass  : 1                                                                                                               Fail  : 0                                                                                                               Total : 1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 adminUsername Should Not Be A Literal                                                                                     [+] adminUsername Should Not Be A Literal (23 ms)                                                                     apiVersions Should Be Recent In Reference Functions                                                                       [+] apiVersions Should Be Recent In Reference Functions (22 ms)                                                       apiVersions Should Be Recent                                                                                              [?] apiVersions Should Be Recent (24 ms)                                                                                    The apiVersion 2023-05-01 was not found for the resource type: Microsoft.Storage/storageAccounts                                                                                                                                          artifacts parameter                                                                                                       [+] artifacts parameter (21 ms)                                                                                       CommandToExecute Must Use ProtectedSettings For Secrets                                                                   [+] CommandToExecute Must Use ProtectedSettings For Secrets (22 ms)                                                   DependsOn Best Practices                                                                                                  [+] DependsOn Best Practices (22 ms)                                                                                  Deployment Resources Must Not Be Debug                                                                                    [+] Deployment Resources Must Not Be Debug (21 ms)                                                                    DeploymentTemplate Must Not Contain Hardcoded Uri                                                                         [+] DeploymentTemplate Must Not Contain Hardcoded Uri (18 ms)                                                         DeploymentTemplate Schema Is Correct                                                                                      [+] DeploymentTemplate Schema Is Correct (17 ms)                                                                      Dynamic Variable References Should Not Use Concat                                                                         [+] Dynamic Variable References Should Not Use Concat (17 ms)                                                         IDs Should Be Derived From ResourceIDs                                                                                    [+] IDs Should Be Derived From ResourceIDs (23 ms)                                                                    Location Should Not Be Hardcoded                                                                                          [-] Location Should Not Be Hardcoded (25 ms)                                                                                outputparameters.json must use the location parameter, not resourceGroup().location or deployment().location    (except when used as a default value in the main template)                                                                                                                                                                                        ManagedIdentityExtension must not be used                                                                                 [+] ManagedIdentityExtension must not be used (17 ms)                                                                 Min And Max Value Are Numbers                                                                                             [+] Min And Max Value Are Numbers (18 ms)                                                                             Outputs Must Not Contain Secrets                                                                                          [+] Outputs Must Not Contain Secrets (19 ms)                                                                          Parameter Types Should Be Consistent                                                                                      [+] Parameter Types Should Be Consistent (21 ms)                                                                      Parameters Must Be Referenced                                                                                             [+] Parameters Must Be Referenced (20 ms)                                                                             Password params must be secure                                                                                            [+] Password params must be secure (29 ms)                                                                            providers apiVersions Is Not Permitted                                                                                    [+] providers apiVersions Is Not Permitted (26 ms)                                                                    ResourceIds should not contain                                                                                            [+] ResourceIds should not contain (18 ms)                                                                            Resources Should Have Location                                                                                            [+] Resources Should Have Location (23 ms)                                                                            Resources Should Not Be Ambiguous                                                                                         [+] Resources Should Not Be Ambiguous (25 ms)                                                                         Secure Params In Nested Deployments                                                                                       [+] Secure Params In Nested Deployments (23 ms)                                                                       Secure String Parameters Cannot Have Default
+    [+] Secure String Parameters Cannot Have Default (21 ms)
+  Template Should Not Contain Blanks
+    [+] Template Should Not Contain Blanks (40 ms)
+  URIs Should Be Properly Constructed
+    [+] URIs Should Be Properly Constructed (25 ms)
+  Variables Must Be Referenced
+    [+] Variables Must Be Referenced (21 ms)
+  Virtual Machines Should Not Be Preview
+    [+] Virtual Machines Should Not Be Preview (24 ms)
+  VM Images Should Use Latest Version
+    [+] VM Images Should Use Latest Version (22 ms)
+  VM Size Should Be A Parameter
+    [+] VM Size Should Be A Parameter (24 ms)
+
+Pass  : 30
+Fail  : 1
+Total : 31
+
+Chapter 17
+Functions
+https://learn.microsoft.com/en-us/azure/azure-resource-manager/templates/template-functions
+
+Chapter 18
+Naming conversion
+https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/azure-best-practices/resource-naming

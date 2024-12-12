@@ -1,0 +1,53 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "env": {
+            "type": "string",
+            "defaultValue": "dev",
+            "metadata": {
+                "description": "environment name"
+            }
+        },
+        "timestamp": {
+            "type": "string",
+            "defaultValue": "[utcNow('u')]",
+            "metadata": {
+                "description": "description"
+            }
+        }
+    },
+    "functions": [],
+    "variables": {},
+    "resources": [],
+    "outputs": {
+        "output1": {
+            "type": "string",
+            "value": "[concat('stg','dev','fs24','uk')]"
+        },
+        "output2": {
+            "type": "string",
+            "value": "[subscription().id]"
+        },
+        "output3": {
+            "type": "string",
+            "value": "[resourceGroup().location]"
+        },
+        "output4": {
+            "type": "bool",
+            "value": "[equals(parameters('env'),'prod')]"
+        },
+        "output5": {
+            "type": "string",
+            "value": "[parameters('timestamp')]"
+        },
+        "output6": {
+            "type": "string",
+            "value": "[dateTimeAdd(parameters('timestamp'),'P30D')]"
+        },
+        "output7": {
+            "type": "string",
+            "value": "[uniqueString('dasdas3243vfsd')]"
+        }
+    }
+}

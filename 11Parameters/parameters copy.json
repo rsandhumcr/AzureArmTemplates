@@ -1,0 +1,35 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "stgName1": {
+            "type": "string",
+            "defaultValue":"default value",
+            "allowedValues": ["Allowed value 1", "Allowed value 2", "Allowed value 3"],
+            "minValue": "<int smallest value>",
+            "maxValue": "<int largest value>",
+            "minLength": "<string Min length of value>",
+            "maxLength": "<string Max length of value>",
+            "metadata": {
+                "description": "Storage account name1"
+            }
+        },
+        "stgName2": {
+            "type": "int",
+            "defaultValue":"default value",
+            "allowedValues": ["Allowed value 1", "Allowed value 2", "Allowed value 3"],
+            "minValue": "<int smallest value>",
+            "maxValue": "<int largest value>",
+            "minLength": "<string Min length of value>",
+            "maxLength": "<string Max length of value>",
+            "metadata": {
+                "description": "Storage account name2"
+            }
+        },        
+    },
+    "functions": [],
+    "variables": {},
+    "resources": [
+   ],
+    "outputs": {}
+}

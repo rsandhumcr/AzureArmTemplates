@@ -1,0 +1,79 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "kvObjectID": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Object ID "
+            }
+        },
+        "loginpassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "Login Password"
+            }
+        },
+        "kvname": {
+            "type": "string",
+            "defaultValue": "[concat('kvdev',uniqueString(resourceGroup().id),'uk')]",
+            "metadata": {
+                "description": "Keyvault Name"
+            }
+        }
+    },
+    "functions": [],
+    "variables": {},
+    "resources": [
+        {
+            "name": "[parameters('kvname')]",
+            "type": "Microsoft.KeyVault/vaults",
+            "apiVersion": "2023-02-01",
+            "location": "[resourceGroup().location]",
+            "tags": {
+                "displayName": "[parameters('kvname')]"
+            },
+            "properties": {
+                "enabledForDeployment": true,
+                "enabledForTemplateDeployment": true,
+                "enabledForDiskEncryption": true,
+                "tenantId": "[subscription().tenantId]",
+                "accessPolicies": [
+                    {
+                        "tenantId": "[subscription().tenantId]",
+                        "objectId": "[parameters('kvObjectID')]",
+                        "permissions": {
+                            "keys": [
+                                "Get"
+                            ],
+                            "secrets": [
+                                "List",
+                                "Get",
+                                "Set"
+                            ]
+                        }
+                    }
+                ],
+                "sku": {
+                    "name": "standard",
+                    "family": "A"
+                }
+            },
+            "resources": [
+                {
+                    "type": "secrets",
+                    "name": "keyVaultSecret1",
+                    "apiVersion": "2016-10-01",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.KeyVault/vaults',parameters('kvname'))]"
+                    ],
+                    "properties": {
+                        "value": "[parameters('loginpassword')]"
+                    }
+                }
+            ]
+        }
+    ],
+    "outputs": {}
+}
